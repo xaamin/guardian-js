@@ -1,5 +1,6 @@
 # Authorization
 
+- [Instalation](#installation)
 - [Introduction](#introduction)
 - [User interface](#user)
 - [Setting up a user](#set-user)
@@ -7,6 +8,17 @@
     - [Writing Gates](#writing-gates)
     - [Authorizing Actions](#authorizing-actions-via-gates)
     - [Intercepting Gate Checks](#intercepting-gate-checks)
+
+<a name="installation">
+## Installation
+
+Issue the next command in the command line
+
+```js
+npm install @xaamin/guardian
+// or
+yarn install @xaamin/guardian
+```
 
 <a name="introduction"></a>
 ## Introduction
