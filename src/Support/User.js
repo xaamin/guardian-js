@@ -24,19 +24,23 @@ class User {
     }
 
     getPermissions() {
-        if (!this.permissions) {
-            throw new Error('Not implemented');
+        const permissions = this.attributes.permissions;
+
+        if (!permissions) {
+            throw new Error('Properties not defined for current user');
         }
 
-        return this.permissions;
+        return permissions;
     }
 
     getRoles() {
-        if (!this.roles) {
-            throw new Error('Not implemented');
+        const roles = this.attributes.roles;
+
+        if (!roles) {
+            throw new Error('Properties not defined for current user');
         }
 
-        return this.roles;
+        return roles;
     }
 
     is(role) {
