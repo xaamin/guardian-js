@@ -108,10 +108,22 @@ class Guardian
         return !this.allows.apply(this, arguments);
     }
 
-    forUser(user) {
-        if (user instanceof User === false) {
+    __validate(user) {
+        const instanceOfUser = user instanceof User === true;
+
+        if (!instanceOfUser && user.roles && user.permissions) {
+            user = new User(user);
+        } else if (!instanceOfUser && !user.roles && !roles.permissions) {
+            throw new Error('User object does not have a roles or permissions properties');
+        } else if (!instanceOfUser) {
             throw new Error('Class for user is not a implementation of Guardian/User');
         }
+
+        return user;
+    }
+
+    forUser(user) {
+        user = this.__validate(user);
 
         const guardian = new Guardian();
 
@@ -127,9 +139,7 @@ class Guardian
     }
 
     setUser(user) {
-        if (user instanceof User === false) {
-            throw new Error('Class for user is not a implementation of Guardian/User');
-        }
+        user = this.__validate(user);
 
         this.user = user;
 

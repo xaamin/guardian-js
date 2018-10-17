@@ -24,11 +24,19 @@ class User {
     }
 
     getPermissions() {
-        throw new Error('Not implemented');
+        if (!this.permissions) {
+            throw new Error('Not implemented');
+        }
+
+        return this.permissions;
     }
 
     getRoles() {
-        throw new Error('Not implemented');
+        if (!this.roles) {
+            throw new Error('Not implemented');
+        }
+
+        return this.roles;
     }
 
     is(role) {
