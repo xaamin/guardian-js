@@ -88,7 +88,7 @@ class Guardian
         const ability = params.shift();
 
         // Apply basic user ACL
-        if (allowed === false) {
+        if (allowed === false && !this.isDefined(ability)) {
             allowed = this.getUser().can(ability);
         }
 
