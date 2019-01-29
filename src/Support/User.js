@@ -24,19 +24,23 @@ class User {
     }
 
     getPermissions() {
-        if (!this.permissions) {
-            throw new Error('Not implemented');
+        const attributes = this.getData();
+
+        if (!attributes.permissions) {
+            throw new Error('Permissions Not implemented');
         }
 
-        return this.permissions;
+        return attributes.permissions;
     }
 
     getRoles() {
-        if (!this.roles) {
-            throw new Error('Not implemented');
+        const attributes = this.getData();
+
+        if (!attributes.roles) {
+            throw new Error('Roles Not implemented');
         }
 
-        return this.roles;
+        return attributes.roles;
     }
 
     is(role) {
