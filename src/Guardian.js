@@ -4,7 +4,7 @@ class Guardian
 {
     constructor() {
         this.policies = [];
-        this.logedInUser = null;
+        this.user = null;
 
         this.get = this.get.bind(this);
 
