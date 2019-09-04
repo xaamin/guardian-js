@@ -1,9 +1,15 @@
-const User = require('./Support/User');
+import User from './Support/User';
+import { UserInterface } from './Interfaces/UserInterface';
 
 class Guardian
 {
+    private policies: any;
+    private user: null | User;
+    private static _before: (user: User, ability: string | string[]) => {};
+    private static _after: (user: User, ability: string | string[], result: boolean, ...args: any[]) => {};
+
     constructor() {
-        this.policies = [];
+        this.policies = {};
         this.user = null;
 
         this.get = this.get.bind(this);
@@ -13,27 +19,27 @@ class Guardian
         });
     }
 
-    before(callback) {
+    before(callback: (user: User, ability: string | string[]) => {}): void {
         Guardian._before = callback;
     }
 
-    after(callback) {
+    after(callback: (user: User, ability: string | string[], result: boolean, ...args: any[]) => {}): void {
         Guardian._after = callback;
     }
 
-    get(target, name) {
-        return name in target ? target[name] : this.getUser()[name];
+    get(target: Guardian, name): any {
+        return name in target ? (target as any)[name] : this.getUser()[name];
     }
 
-    define(policy, callback) {
+    define(policy: string, callback: any): void {
         this.policies[policy] = callback;
     }
 
-    isDefined(policy) {
+    isDefined(policy): boolean {
         return this.policies[policy] !== undefined;
     }
 
-    applyBeforeCheck() {
+    applyBeforeCheck(): boolean {
         let allowed = false;
 
         if (Guardian._before) {
@@ -43,7 +49,7 @@ class Guardian
         return allowed;
     }
 
-    applyAfterCheck() {
+    applyAfterCheck(): void {
         if (Guardian._after) {
             let params = [].slice.call(arguments);
 
@@ -51,31 +57,28 @@ class Guardian
         }
     }
 
-    _applyPolicy() {
+    _applyPolicy() : boolean {
         let params = [].slice.call(arguments);
         const user = params.shift();
         const policy = params.shift();
-        let allowed = false;
 
-        if (allowed === false) {
-            if (!this.isDefined(policy)) {
-                return false;
-            }
-
-            const args = [user].concat(params);
-
-            allowed = this.policies[policy].apply(this, args);
+        if (!this.isDefined(policy)) {
+            return false;
         }
+
+        const args = [user].concat(params);
+
+        const allowed = this.policies[policy].apply(this, args);
 
         return allowed;
     }
 
-    allows() {
+    allows(): boolean {
         let params = [].slice.call(arguments);
         const user = this.getUser();
 
         let allowed = false;
-        let args = [user].concat(params);
+        let args: any[] = [user].concat(params);
 
         // Apply global checks
         allowed = this.applyBeforeCheck.apply(this, args);
@@ -92,11 +95,7 @@ class Guardian
             allowed = this.getUser().can(ability);
         }
 
-        args =
-            [user]
-                .concat([ability])
-                .concat([allowed])
-                .concat(params);
+        args = [user].concat([ability, allowed, params]);
 
         // Apply global after checks, this does not mutate the result
         this.applyAfterCheck.apply(this, args);
@@ -104,25 +103,25 @@ class Guardian
         return allowed;
     }
 
-    denies() {
+    denies(): boolean {
         return !this.allows.apply(this, arguments);
     }
 
-    __validate(user) {
+    __validate(user: User | UserInterface): User {
         const instanceOfUser = user instanceof User === true;
 
-        if (!instanceOfUser && user.roles && user.permissions) {
+        if (!instanceOfUser && (user as UserInterface).roles && (user as UserInterface).permissions) {
             user = new User(user);
-        } else if (!instanceOfUser && !user.roles && !roles.permissions) {
+        } else if (!instanceOfUser && (!(user as UserInterface).roles || !(user as UserInterface).permissions)) {
             throw new Error('User object does not have a roles or permissions properties');
         } else if (!instanceOfUser) {
             throw new Error('Class for user is not a implementation of Guardian/User');
         }
 
-        return user;
+        return user as User;
     }
 
-    forUser(user) {
+    forUser(user: User | UserInterface): Guardian {
         user = this.__validate(user);
 
         const guardian = new Guardian();
@@ -138,7 +137,7 @@ class Guardian
         return guardian;
     }
 
-    setUser(user) {
+    setUser(user: User | UserInterface): Guardian {
         user = this.__validate(user);
 
         this.user = user;
@@ -146,7 +145,7 @@ class Guardian
         return this;
     }
 
-    getUser() {
+    getUser(): User {
         let user = this.user;
 
         if (!user) {
@@ -156,9 +155,9 @@ class Guardian
         return user;
     }
 
-    getPolicies() {
+    getPolicies(): any[] {
         return this.policies;
     }
 }
 
-module.exports = Guardian;
+export default Guardian;

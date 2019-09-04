@@ -12,4 +12,4 @@ class GuardianServiceProvider extends ServiceProvider {
     boot() {}
 }
 
-module.exports = GuardianServiceProvider
+module.exports = GuardianServiceProvider;

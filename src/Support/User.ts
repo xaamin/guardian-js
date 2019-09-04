@@ -1,5 +1,10 @@
+import { RoleInterface } from '../Interfaces/RoleInterface';
+import { PermissionInterface } from '../Interfaces/PermissionInterface';
+
 class User {
-    constructor(attributes) {
+    protected attributes: any;
+
+    constructor(attributes: any = {}) {
         this.attributes = attributes;
 
         this.get = this.get.bind(this);
@@ -9,8 +14,8 @@ class User {
         });
     }
 
-    get(target, name) {
-        return name in target ? target[name] : target.getData()[name];
+    get(target: User, name: string) {
+        return name in target ? (target as any)[name] : target.getData()[name];
     }
 
     getData() {
@@ -43,22 +48,22 @@ class User {
         return attributes.roles;
     }
 
-    is(role) {
+    is(role: string | string[]) {
         const roles = this.getRoles();
         const requested = typeof role === 'string' ? [role] : role;
 
-        const founded = roles.filter((value) => {
+        const founded = roles.filter((value: RoleInterface) => {
             return requested.indexOf(value.role) !== -1;
         });
 
         return founded.length > 0;
     }
 
-    can(ability) {
+    can(ability: string | string[]) {
         const permissions = this.getPermissions();
         const requested = typeof ability === 'string' ? [ability] : ability;
 
-        const founded = permissions.filter((value) => {
+        const founded = permissions.filter((value: PermissionInterface) => {
             return requested.indexOf(value.permission) !== -1 && value.granted === true;
         });
 
@@ -66,4 +71,4 @@ class User {
     }
 }
 
-module.exports = User;
+export default User;
