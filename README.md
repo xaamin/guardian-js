@@ -9,7 +9,8 @@
     - [Authorizing Actions](#authorizing-actions-via-gates)
     - [Intercepting Gate Checks](#intercepting-gate-checks)
 
-<a name="installation">
+
+<a name="installation"></a>
 ## Installation
 
 Issue the next command in the command line
@@ -29,15 +30,15 @@ Think of gates as simple ACL rules. Gates provide a simple, Closure based approa
 
 You can use `Gate` or `Guardian`, both are only aliases and have the same features.
 
+For NodeJS imports you have to use the `const { User } = require('@xaamin/guardian');` and `module.exports = AuthorizedUser;` sintax.
+
 <a name="user"></a>
 ## User interface (The contract)
 
 You must need to create a base class that inherit from `@xaamin/guardian/src/Support/User` in order to make the module works. You only need to implement the remaining `getPermissions` and `getRoles` methods and return the proper values from inside out.
 
 ```js
-    const { User } = require('@xaamin/guardian');
-    // Or
-    // const { User } = require('@xaamin/guardian');
+    import { User } from '@xaamin/guardian';
 
     class AuthorizedUser extends User {
         getPermissions() {
@@ -49,9 +50,7 @@ You must need to create a base class that inherit from `@xaamin/guardian/src/Sup
         }
     }
 
-    module.exports = AuthorizedUser;
-    // Or
-    // export default AuthorizedUser;
+    export default AuthorizedUser;
 ```
 
 <a name="set-user"></a>
@@ -61,18 +60,10 @@ You need to create a class that inherit from `@xaamin/guardian/src/Support/User`
 
 ```js
     // Import the guadian gate
-    const { Guardian } = require('@xaamin/guardian');
-    // Or
-    // import { Guardian } from '@xaamin/guardian';
-
-    // Import the User class, you can use your own implementation
-    const { User } = require('@xaamin/guardian');
-    // Or
-    // import { User } from '@xaamin/guardian';
+    import { Guardian } from '@xaamin/guardian';
+    import { User } from '@xaamin/guardian';
 
     // Or using your own implementation
-    // const User = require('./AuthorizedUser');
-    // Or
     // import User from './AuthorizedUser';
 
     const LoggedInUser = new User({
@@ -140,9 +131,7 @@ You need to create a class that inherit from `@xaamin/guardian/src/Support/User`
 Gates are Closures that determine if a user is authorized to perform a given action. Gates always receive a user instance as their first argument with all the power of ACL validation, and may optionally receive additional arguments such as a relevant model:
 
 ```js
-    const { Guardian } = require('@xaamin/guardian');
-    // Or
-    // import { Guardian } from '@xaamin/guardian';
+    import { Guardian } from '@xaamin/guardian';
 
     // Using the built-in ACL under user
     Guardian.define('post.update', (user, post) => {
@@ -161,9 +150,7 @@ Gates are Closures that determine if a user is authorized to perform a given act
 To authorize an action using gates, you should use the `allows` or `denies` methods. Note that you are not required to pass the currently authenticated user to these methods. The module will automatically take care of passing the user into the gate Closure:
 
 ```js
-    const { Gate } = require('@xaamin/guardian');
-    // Or
-    // import { Gate } from '@xaamin/guardian';
+    import { Gate } from '@xaamin/guardian';
 
     if (Gate::allows('post.update', post)) {
         // The current user can update the post...
@@ -177,8 +164,7 @@ To authorize an action using gates, you should use the `allows` or `denies` meth
 If you would like to determine if a particular user is authorized to perform an action, you may use the `forUser` method on the `Gate` facade:
 
 ```js
-    const { Gate } = require('@xaamin/guardian');// Or
-    // import { Gate } from '@xaamin/guardian';
+    import { Gate } from '@xaamin/guardian';
 
     if (Gate::forUser(user)->allows('post.update', post)) {
         // The user can update the post...
@@ -195,8 +181,7 @@ If you would like to determine if a particular user is authorized to perform an 
 Sometimes, you may wish to grant all abilities to a specific user. You may use the `before` method to define a callback that is run before all other authorization checks:
 
 ```js
-    const { Gate } = require('@xaamin/guardian');// Or
-    // import { Gate } from '@xaamin/guardian';
+    import { Gate } from '@xaamin/guardian';
 
     Gate::before(function (user, ability) {
         if (user->is('admin')) {
@@ -210,9 +195,7 @@ If the `before` callback returns a non-null result that result will be considere
 You may use the `after` method to define a callback to be executed after every authorization check. However, you may not modify the result of the authorization check from an `after` callback:
 
 ```js
-    const { Gate } = require('@xaamin/guardian');
-    // Or
-    // import { Gate } from '@xaamin/guardian';
+    import { Gate } from '@xaamin/guardian';
 
     Gate::after(function (user, ability, result, arguments) {
         //
