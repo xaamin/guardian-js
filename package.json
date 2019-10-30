@@ -1,11 +1,11 @@
 {
   "name": "@xaamin/guardian",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Awesome ACL",
   "keywords": [],
   "main": "dist/guardian.umd.js",
   "module": "dist/guardian.es5.js",
-  "typings": "dist/types/guardian.d.ts",
+  "typings": "dist/types/index.d.ts",
   "files": [
     "dist"
   ],
