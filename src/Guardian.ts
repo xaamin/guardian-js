@@ -155,6 +155,10 @@ class Guardian
         return user;
     }
 
+    isUserLoggedIn(): boolean {
+        return this.user !== null;
+    }
+
     getPolicies(): any[] {
         return this.policies;
     }
