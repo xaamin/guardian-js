@@ -29,9 +29,9 @@
 ## Installation
 
 ```
-npm install @xaamin/guardian
+npm install guardian-acl
 # or
-yarn add @xaamin/guardian
+yarn add guardian-acl
 ```
 
 
@@ -52,7 +52,7 @@ Both approaches can be combined. `Gate` and `Guardian` are the same static facad
 Any plain object satisfying `UserInterface` can represent a user:
 
 ```ts
-import type { UserInterface } from '@xaamin/guardian'
+import type { UserInterface } from 'guardian-acl'
 ```
 
 ```ts
@@ -69,7 +69,7 @@ interface UserInterface {
 The simplest form — string roles and permissions are all granted by default:
 
 ```ts
-import type { UserInterface } from '@xaamin/guardian'
+import type { UserInterface } from 'guardian-acl'
 
 const user: UserInterface = {
   roles: ['admin', 'editor'],
@@ -140,7 +140,7 @@ const user: UserInterface = {
 Extend the base `User` class to add domain-specific helpers. Extra properties you pass in the attributes object are automatically forwarded through the proxy:
 
 ```ts
-import { User } from '@xaamin/guardian'
+import { User } from 'guardian-acl'
 
 class AppUser extends User {
   get fullName(): string {
@@ -176,7 +176,7 @@ user.isVerified() // true
 Set the active user on the global facade. Accepts a plain `UserInterface` object or a `User` instance:
 
 ```ts
-import { Gate, User } from '@xaamin/guardian'
+import { Gate, User } from 'guardian-acl'
 
 // From a plain object
 Gate.setUser({
@@ -210,7 +210,7 @@ Gate.setUser(user).allows('post.create')
 Returns a new, isolated `GuardianGate` scoped to a specific user. All registered policies are copied over. The global facade is not modified:
 
 ```ts
-import { Gate } from '@xaamin/guardian'
+import { Gate } from 'guardian-acl'
 
 const adminGate = Gate.forUser(adminUser)
 const editorGate = Gate.forUser(editorUser)
@@ -231,7 +231,7 @@ The `User` class (and any class extending it) exposes the following methods.
 ### Role checks
 
 ```ts
-import { User } from '@xaamin/guardian'
+import { User } from 'guardian-acl'
 
 const user = new User({
   roles: ['admin', 'editor'],
@@ -314,7 +314,7 @@ user.getData()
 Register a named policy with `Gate.define()`. The first argument to the callback is always the current user; additional arguments are typed directly from the function expression — no extra setup required:
 
 ```ts
-import { Gate, User } from '@xaamin/guardian'
+import { Gate, User } from 'guardian-acl'
 
 interface Post    { id: number; authorId: number; published: boolean }
 interface Comment { postId: number; body: string }
@@ -346,7 +346,7 @@ Gate.define('comment.moderate', (user: User, comment: Comment) => {
 ### Authorizing Actions
 
 ```ts
-import { Gate } from '@xaamin/guardian'
+import { Gate } from 'guardian-acl'
 
 const post: Post = { id: 1, authorId: 42, published: false }
 
@@ -384,7 +384,7 @@ Gate.allows('post.update')   // false — not in permissions, no policy defined
 ### any / every
 
 ```ts
-import { Gate } from '@xaamin/guardian'
+import { Gate } from 'guardian-acl'
 
 // True if the user is allowed to perform at least one ability
 if (Gate.any(['post.update', 'post.delete'], post)) {
@@ -405,7 +405,7 @@ if (Gate.every(['post.create', 'post.publish'])) {
 Runs before every authorization check. Return `true` or `false` to short-circuit the result. Return `undefined` (or nothing) to let the normal check proceed:
 
 ```ts
-import { Gate, User } from '@xaamin/guardian'
+import { Gate, User } from 'guardian-acl'
 
 Gate.before((user: User, ability: string) => {
   if (user.is('super-admin')) {
@@ -420,7 +420,7 @@ Gate.before((user: User, ability: string) => {
 Runs after every authorization check. The result cannot be changed, but it is useful for auditing and logging:
 
 ```ts
-import { Gate, User } from '@xaamin/guardian'
+import { Gate, User } from 'guardian-acl'
 
 Gate.after((user: User, ability: string, result: boolean) => {
   console.log(`[guardian] ${ability} → ${result ? 'allowed' : 'denied'}`)
@@ -438,7 +438,7 @@ Gate.before((user: User, ability: string, ...args: unknown[]) => {
 If you need to store the callback in a typed variable, use the exported types:
 
 ```ts
-import type { BeforeCallback, AfterCallback } from '@xaamin/guardian'
+import type { BeforeCallback, AfterCallback } from 'guardian-acl'
 
 const beforeHook: BeforeCallback = (user, ability) => {
   if (user.is('super-admin')) return true
@@ -461,7 +461,7 @@ Gate.after(afterHook)
 `Guardian` and `Gate` are a static facade over a shared `GuardianGate` instance. Use `GuardianGate` directly to create fully independent instances — useful in multi-tenant applications or for per-request isolation:
 
 ```ts
-import { GuardianGate, User } from '@xaamin/guardian'
+import { GuardianGate, User } from 'guardian-acl'
 
 const gate = new GuardianGate()
 
@@ -493,7 +493,7 @@ Guardian is designed to be testable without mocking or monkey-patching.
 Call `Guardian.reset()` in `beforeEach` to give each test a clean facade with no user, no policies, and no hooks:
 
 ```ts
-import { Guardian } from '@xaamin/guardian'
+import { Guardian } from 'guardian-acl'
 
 beforeEach(() => Guardian.reset())
 ```
@@ -503,7 +503,7 @@ beforeEach(() => Guardian.reset())
 `Guardian.swap()` replaces the facade's underlying `GuardianGate` with any instance you provide. This is useful when you want to pre-configure a gate and hand it to the facade, or inject a subclass:
 
 ```ts
-import { Guardian, GuardianGate } from '@xaamin/guardian'
+import { Guardian, GuardianGate } from 'guardian-acl'
 
 beforeEach(() => {
   const gate = new GuardianGate()
@@ -521,7 +521,7 @@ afterEach(() => Guardian.reset())
 For the highest isolation — when two tests must coexist in the same suite without touching shared state — use `GuardianGate` directly instead of the facade. Each instance has its own user, policies, and hooks:
 
 ```ts
-import { GuardianGate, User } from '@xaamin/guardian'
+import { GuardianGate, User } from 'guardian-acl'
 
 it('admin can delete posts', () => {
   const gate = new GuardianGate()
@@ -608,7 +608,7 @@ import type {
   PolicyCallback,
   BeforeCallback,
   AfterCallback,
-} from '@xaamin/guardian'
+} from 'guardian-acl'
 ```
 
 | Type | Definition |

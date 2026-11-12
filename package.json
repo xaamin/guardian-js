@@ -1,5 +1,5 @@
 {
-  "name": "@xaamin/guardian",
+  "name": "guardian-acl",
   "version": "1.0.0",
   "description": "Authorization library with access control lists (ACL), role-based permissions (RBAC), and resource-aware policy gates.",
   "keywords": [
@@ -36,10 +36,10 @@
   "files": [
     "dist"
   ],
-  "author": "Ben <xaamin@outlook.com>",
+  "author": "Benjamin <xaamin@outlook.com>",
   "repository": {
     "type": "git",
-    "url": "https://github.com/xaamin/guardian-js"
+    "url": "git+https://github.com/xaamin/guardian-js.git"
   },
   "license": "MIT",
   "engines": {
