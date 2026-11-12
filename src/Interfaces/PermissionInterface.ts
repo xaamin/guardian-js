@@ -1,4 +1,6 @@
 export interface PermissionInterface {
-  permission: string,
+  permission: string
   granted?: boolean
 }
+
+export type PermissionInput = string | PermissionInterface

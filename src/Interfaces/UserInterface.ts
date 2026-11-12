@@ -1,7 +1,8 @@
-import { RoleInterface } from './RoleInterface';
-import { PermissionInterface } from './PermissionInterface';
+import { RoleInput } from './RoleInterface'
+import { PermissionInput } from './PermissionInterface'
 
 export interface UserInterface {
-  roles: RoleInterface[],
-  permissions: PermissionInterface[],
+  roles: RoleInput[]
+  permissions: PermissionInput[]
+  [key: string]: unknown
 }
