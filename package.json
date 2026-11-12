@@ -1,6 +1,6 @@
 {
   "name": "@xaamin/guardian",
-  "version": "0.2.3",
+  "version": "1.0.0",
   "description": "Authorization library with access control lists (ACL), role-based permissions (RBAC), and resource-aware policy gates.",
   "keywords": [
     "acl",
